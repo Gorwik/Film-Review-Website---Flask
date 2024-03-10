@@ -1,0 +1,129 @@
+{% extends "base.html" %} {% block title %}Film{% endblock %} {% block content%}
+{% if film %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <img src="{{film.poster_path}}" class="img-fluid" alt="{{film.title}}" />
+    </div>
+    <div class="col-md-8">
+      <ul class="list-group" width="200">
+        <li class="list-group-item list-group-item-light" width="200">
+          Title: {{film.title}}
+        </li>
+        <li class="list-group-item list-group-item-dark" width="200">
+          Original Title: {{film.original_title}}
+        </li>
+        <li class="list-group-item list-group-item-light" width="200">
+          Genre: {{film.genre}}
+        </li>
+        <li class="list-group-item list-group-item-dark" width="200">
+          Realse Date: {{film.release_date}}
+        </li>
+        <li class="list-group-item list-group-item-light" width="200">
+          Vote Avarage: {{film.vote_average}}
+        </li>
+        <li class="list-group-item list-group-item-dark" width="200">
+          Popularity: {{film.popularity}}
+        </li>
+        <li class="list-group-item list-group-item-light" width="200">
+          Production Countries: {{film.production_countries}}
+        </li>
+        <li class="list-group-item list-group-item-dark" width="200">
+          Production Companies: {{film.production_companies}}
+        </li>
+        <li class="list-group-item list-group-item-light" width="200">
+          Budget: {{film.budget}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  {% if film.overview %}
+  <div class="row">
+    <label
+      class="label label-primary"
+      style="border: 1px solid #ccc; background-color: #f9f9f9 padding: 5px 10px; border-radius: 5px; font-size: 16px;"
+      >Overview: {{film.overview}}</label
+    >
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<p>Sorry, we can't show the content</p>
+{% endif %}
+<br />
+{% block note %} {% endblock %}
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Comments</h4>
+      <hr />
+      {% for forum_comment in forum_comments %}
+      {% if not forum_comment.parent_forum_comment_id %}
+      <div class="media mb-4">
+        <img
+          class="mr-3 rounded-circle"
+          src="https://via.placeholder.com/50x50"
+          alt="User Avatar"
+        />
+        <div class="media-body">
+          <h5 class="mt-0">{{names.get(forum_comment.user_id, "anonim")}}</h5>
+          <p>{{forum_comment.data}}.</p>
+          {% if user.is_authenticated %}
+            <div class="container">
+              <div class="form-group">
+                  <label for="comment-reply">Reply to this comment:</label>
+                  <textarea
+                  class="form-control"
+                  name="comment-reply"
+                  id="comment-reply-{{forum_comment.id}}"
+                  rows="3"
+                  ></textarea>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" onclick="reply_comment({{user.id}}, {{forum_comment.id}}, {{film.id}})">Reply</button>
+              {% if user.id == forum_comment.user_id %}
+                <button
+                    type="button"
+                    class="btn btn-danger btn-sm ml-2"
+                    data-toggle="modal"
+                    onclick="delete_comment({{forum_comment.id}}, {{film.id}})"
+                >
+                    Delete
+                </button>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if forum_comment.replies.all() %}
+        {% for reply in forum_comment.replies.all() %}
+        <div class="media mb-4 ml-5">
+          <img
+            class="mr-3 rounded-circle"
+            src="https://via.placeholder.com/50x50"
+            alt="User Avatar"
+          />
+          <div class="media-body">
+            <h5 class="mt-0">{{names.get(reply.user_id, "anonim")}}</h5>
+            <p>{{reply.data}}</p>
+            {% if user.id == reply.user_id %}
+                <button
+                type="button"
+                class="btn btn-danger btn-sm ml-2"
+                data-toggle="modal"
+                onclick="delete_comment({{reply.id}}, {{film.id}})"
+                >
+                Delete
+                </button>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+      {% endif %}
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+{% block write_comment %} {% endblock %} {% endblock %}

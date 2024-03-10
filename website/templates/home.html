@@ -1,0 +1,74 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %}
+
+{% block content%}
+    <h1 align="center">What are you looking for?</h1>
+    <form class="row gx-3 gy-3 align-items-center" method="POST">
+        <div class="col-12">
+            <input type="text" class="form-control" placeholder="Title" aria-label="Title" name="title">
+        </div>
+        <br>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Release year</label>
+            <select id="inputState" class="form-select" name="year">
+              <option></option>
+                {% for year in years%}
+                    <option value="{{year}}">{{year}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Genre</label>
+            <select id="inputState" class="form-select" name="genre">
+              <option> </option>
+                {% if genres %}
+                    {% for genre_id, genre_name in genres.items()%}
+                        <option value="{{genre_id}}">{{genre_name.capitalize()}}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="inputState" class="form-label">Rating</label>
+            <select id="inputState" class="form-select" name="rate">
+              <option></option>
+                {% for rate in rating%}
+                    <option value="{{rate}}">{{rate}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="col 12">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    <br>
+
+    {% if films %}
+        {% for film in films %}
+        <div class="container-sm">
+            <div class="row">
+                <a href="/film/{{film.id}}">
+                    <img src="{{film.poster_path}}" class="rounded float-start" alt="{{film.title}}" width="250" height="246">
+                </a>
+                <ul class="list-group" width="200">
+                    
+                    <li class="list-group-item list-group-item-light" width="200">Title: {{film.title}}</li>
+                    <li class="list-group-item list-group-item-dark" width="200">Genre: {{film.genre}}</li>
+                    <li class="list-group-item list-group-item-light" width="200">Realse Date: {{film.release_date}}</li>
+                    <li class="list-group-item list-group-item-dark" width="200">Vote Avarage: {{film.vote_average}}</li>
+                    <li class="list-group-item list-group-item-light" width="200">Popularity: {{film.popularity}}</li>
+                </ul>
+            </div>
+            {% if film.overview %}
+            <div class="row">
+                <label class="label label-primary" style="border: 1px solid #ccc; background-color: #f9f9f9 padding: 5px 10px; border-radius: 5px; font-size: 16px;">Overview: {{film.overview}}</label>
+            </div>
+            {% endif %}
+        </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p>Sorry, we can't show the content</p>
+    {% endif %}
+{% endblock %}
