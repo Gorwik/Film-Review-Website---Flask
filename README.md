@@ -79,7 +79,7 @@ setx TMDB_API_KEY "your-TMDB-key-here"
 ``  
 On Unix or MacOS:  
 ``
-exportTMDB_API_KEY='your-TMDB-key-here'
+export TMDB_API_KEY='your-TMDB-key-here'
 ``
 ## Acknowledgments
 - [Flask foundations](https://www.youtube.com/playlist?list=PLzMcBGfZo4-nK0Pyubp7yIG0RdXp6zklu)
